@@ -1,0 +1,28 @@
+{
+  "name": "Playwright",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:parallel": "playwright test --workers=4",
+    "test:chrome": "playwright test --headed --project=chromium",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "install-browsers": "playwright install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.26.0",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.2.2"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.3.0",
+    "dotenv": "^16.3.1"
+  }
+}
