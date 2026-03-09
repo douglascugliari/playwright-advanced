@@ -1,12 +1,13 @@
 import { test } from '@playwright/test';
 import { LoginPage } from '../src/pages/LoginPage';
-import { UserFactory } from '../src/data/factories/userFactory';
+import { UserFactory } from '../src/core/factories/userFactory';
+import { createUserViaAPI, deleteUserViaAPI } from '../src/services/userService';
 import { MessagesLogin } from '../src/data/messages/messagesLogin';
-import { TestUser } from '../src/types/testUser';
+import { User } from '../src/types/user';
 
 test.describe('Authentication and Login', () => {
     let loginPage: LoginPage;
-    let credentialsDelete: TestUser[] = [];
+    let credentialsDelete: User[] = [];
 
     test.beforeEach(async ({ page }) => {
         loginPage = new LoginPage(page);
@@ -15,14 +16,14 @@ test.describe('Authentication and Login', () => {
 
     test.afterEach(async ({ page }) => {
         for (const credentials of credentialsDelete) {
-            await UserFactory.deleteUserApi(page, credentials.id!);
+            await deleteUserViaAPI(credentials.id!);
         }
         credentialsDelete = [];
     });
 
     test('TC-001: Login with valid credentials', async ({ page }) => {
         const credentials = UserFactory.getUser('success');
-        await UserFactory.createUserApi(page, credentials);
+        await createUserViaAPI(credentials);
         await loginPage.login(credentials.email, credentials.password);
         await loginPage.validatedLoginSuccess();
     });
@@ -49,7 +50,7 @@ test.describe('Authentication and Login', () => {
 
     test('TC-005: Redirection based on user profile', async ({ page }) => {
         const credentials = UserFactory.getUser('success');
-        await UserFactory.createUserApi(page, credentials);
+        await createUserViaAPI(credentials);
         await loginPage.login(credentials.email, credentials.password);
         await loginPage.validatedLoginAdminArea();
     });

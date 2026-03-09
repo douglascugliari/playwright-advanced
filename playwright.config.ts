@@ -13,7 +13,7 @@ export default defineConfig({
     ['html']
   ],
   use: {
-    baseURL: process.env.BASE_URL_WEB || 'https://front.serverest.dev',
+    baseURL: process.env.BASE_URL_WEB,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -23,21 +23,21 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: 'https://front.serverest.dev',
+        baseURL: process.env.BASE_URL_WEB,
       },
     },
     {
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
-        baseURL: 'https://front.serverest.dev',
+        baseURL: process.env.BASE_URL_WEB,
       },
     },
     {
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
-        baseURL: 'https://front.serverest.dev',
+        baseURL: process.env.BASE_URL_WEB,
       },
     },
   ],

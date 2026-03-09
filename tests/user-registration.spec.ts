@@ -1,12 +1,13 @@
 import { test } from '@playwright/test';
 import { RegisterUserPage } from '../src/pages/RegisterUserPage';
-import { UserFactory } from '../src/data/factories/userFactory';
+import { UserFactory } from '../src/core/factories/userFactory';
 import { MessagesUser } from '../src/data/messages/messagesUser';
-import { TestUser } from '../src/types/testUser';
+import { User } from '../src/types/user';
+import { createUserViaAPI, deleteUserViaAPI } from '../src/services/userService';
 
 test.describe('User Registration', () => {
     let registerPage: RegisterUserPage;
-    let credentialsDelete: TestUser[] = [];
+    let credentialsDelete: User[] = [];
 
     test.beforeEach(async ({ page }) => {
         registerPage = new RegisterUserPage(page);
@@ -15,7 +16,7 @@ test.describe('User Registration', () => {
 
     test.afterEach(async ({ page }) => {
         for (const credentials of credentialsDelete) {
-            await UserFactory.deleteUserApi(page, credentials.id!);
+            await deleteUserViaAPI(credentials.id!);
         }
         credentialsDelete = [];
     });
@@ -28,7 +29,7 @@ test.describe('User Registration', () => {
 
     test('TC-008: Registration with existing email', async ({ page }) => {
         const user = UserFactory.getUser('fail');
-        await UserFactory.createUserApi(page, user);
+        await createUserViaAPI(user);
         credentialsDelete.push(user);
         await registerPage.registerUser(user.nome, user.email, user.password);
         await registerPage.verifyRegistrationError();
