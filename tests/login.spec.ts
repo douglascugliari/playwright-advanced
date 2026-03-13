@@ -1,46 +1,30 @@
-import { test } from '@playwright/test';
-import { LoginPage } from '../src/pages/LoginPage';
+import { test } from '../src/core/fixtures/test.fixture';
 import { UserFactory } from '../src/core/factories/userFactory';
-import { createUserViaAPI, deleteUserViaAPI } from '../src/services/userService';
 import { MessagesLogin } from '../src/data/messages/messagesLogin';
-import { User } from '../src/types/user';
 
 test.describe('Authentication and Login', () => {
-    let loginPage: LoginPage;
-    let credentialsDelete: User[] = [];
-
-    test.beforeEach(async ({ page }) => {
-        loginPage = new LoginPage(page);
+    test.beforeEach(async ({ loginPage }) => {
         await loginPage.goto();
     })
 
-    test.afterEach(async ({ page }) => {
-        for (const credentials of credentialsDelete) {
-            await deleteUserViaAPI(credentials.id!);
-        }
-        credentialsDelete = [];
-    });
-
-    test('TC-001: Login with valid credentials', async ({ page }) => {
-        const credentials = UserFactory.getUser('success');
-        await createUserViaAPI(credentials);
-        await loginPage.login(credentials.email, credentials.password);
+    test('TC-001: Login with valid credentials', async ({ loginPage, testUser }) => {
+        await loginPage.login(testUser.email, testUser.password);
         await loginPage.validatedLoginSuccess();
     });
 
-    test('TC-002: Login with invalid credentials', async ({ page }) => {
+    test('TC-002: Login with invalid credentials', async ({ loginPage }) => {
         const credentials = UserFactory.getUser('fail');
 
         await loginPage.login(credentials.email, credentials.password);
         await loginPage.validatedLoginFailure('Email e/ou senha inválidos')
     });
 
-    test('TC-003: Login with empty fields', async ({ page }) => {
+    test('TC-003: Login with empty fields', async ({ loginPage }) => {
         await loginPage.login('', '');
         await loginPage.validatedLoginFailureMultiple()
     });
 
-    test('TC-004: Email format validation', async ({ page }) => {
+    test('TC-004: Email format validation', async ({ loginPage }) => {
         const credentials = UserFactory.getUser('email');
         const invalidEmailMessages = MessagesLogin.getMessagesInvalidEmail();
 
@@ -48,10 +32,8 @@ test.describe('Authentication and Login', () => {
         await loginPage.validatedLoginFailureInput(invalidEmailMessages);
     });
 
-    test('TC-005: Redirection based on user profile', async ({ page }) => {
-        const credentials = UserFactory.getUser('success');
-        await createUserViaAPI(credentials);
-        await loginPage.login(credentials.email, credentials.password);
+    test('TC-005: Redirection based on user profile', async ({ loginPage, testUser }) => {
+        await loginPage.login(testUser.email, testUser.password);
         await loginPage.validatedLoginAdminArea();
     });
 });

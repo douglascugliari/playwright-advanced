@@ -1,38 +1,35 @@
 import { faker } from "@faker-js/faker/locale/pt_BR";
-import { User } from "../../types/user";
+import { UserType } from "../../types/UserType";
 
 export class UserFactory {
-    private static generateSuccessUser(): User {
+    private static generateSuccessUser(): UserType {
         return {
             nome: faker.person.fullName(),
             email: faker.internet.email(),
             password: faker.internet.password(),
-            description: 'User from success test',
             administrador: 'true'
         };
     }
 
-    private static generateFailureUser(): User {
+    private static generateFailureUser(): UserType {
         return {
             nome: faker.person.fullName(),
             email: faker.internet.email(),
             password: faker.internet.password(),
-            description: 'User from fail test',
             administrador: 'false'
         };
     }
 
-    private static generateInvalidEmailUser(): User {
+    private static generateInvalidEmailUser(): UserType {
         return {
             nome: faker.person.fullName(),
             email: faker.internet.email().replace('@', ''),
             password: faker.internet.password(),
-            description: 'User with invalid email format',
             administrador: 'true'
         };
     }
 
-    static getUser(type: string): User {
+    static getUser(type: string): UserType {
         switch (type) {
             case 'success':
                 return this.generateSuccessUser();

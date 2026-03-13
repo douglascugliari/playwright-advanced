@@ -1,43 +1,46 @@
 import { defineConfig, devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { env } from './config/env';
 
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.RETRIESCI ? parseInt(process.env.RETRIESCI) : parseInt(process.env.RETRIESLOCAL || '0'),
-  workers: process.env.WORKERSCI ? parseInt(process.env.WORKERSCI) : parseInt(process.env.WORKERSLOCAL || '4'),
+  retries: env.retriesCI ? parseInt(env.retriesCI) : parseInt(env.retriesLocal),
+  workers: env.workersCI ? parseInt(env.workersCI) : parseInt(env.workersLocal),
   reporter: [
     ['list'],
     ['html']
   ],
   use: {
-    baseURL: process.env.BASE_URL_WEB,
+    baseURL: env.baseUrl,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    storageState: 'storageState.json'
   },
+
+  globalSetup: require.resolve('./src/utils/globalSetup'),
+
   projects: [
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: process.env.BASE_URL_WEB,
+        baseURL: env.baseUrl
       },
     },
     {
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
-        baseURL: process.env.BASE_URL_WEB,
+        baseURL: env.baseUrl
       },
     },
     {
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
-        baseURL: process.env.BASE_URL_WEB,
+        baseURL: env.baseUrl
       },
     },
   ],

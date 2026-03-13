@@ -1,28 +1,26 @@
-import { expect } from '@playwright/test';
 import { faker } from "@faker-js/faker/locale/pt_BR";
-import { Product } from "../../types/product";
-import { ProductAPI } from "../../utils/productAPI";
+import { ProductType } from "../../types/ProductType";
 
 export class ProductFactory {
-    private static generateSuccessProduct(): Product {
+    private static generateSuccessProduct(): ProductType {
         return {
             nome: faker.commerce.productName(),
-            preco: parseFloat(faker.commerce.price()).toString(),
+            preco: parseFloat(faker.commerce.price()).toFixed(0).toString(),
             descricao: faker.commerce.productDescription(),
             quantidade: faker.number.int({ min: 1, max: 100 }).toString()
         };
     }
 
-    private static generateFailureProduct(): Product {
+    private static generateFailureProduct(): ProductType {
         return {
             nome: faker.commerce.productName(),
-            preco: parseFloat(faker.commerce.price()).toString(),
+            preco: '-1',
             descricao: faker.commerce.productDescription(),
-            quantidade: faker.number.int({ min: 1, max: 100 }).toString()
+            quantidade: '-1'
         };
     }
 
-    private static generateEmptyProduct(): Product {
+    private static generateEmptyProduct(): ProductType {
         return {
             nome: '',
             preco: '',
@@ -31,33 +29,16 @@ export class ProductFactory {
         };
     }
 
-    private static generateDeleteProduct(): Product {
+    private static generateDeleteProduct(): ProductType {
         return {
             nome: faker.commerce.productName(),
-            preco: parseFloat(faker.commerce.price()).toString(),
+            preco: parseFloat(faker.commerce.price()).toFixed(0).toString(),
             descricao: faker.commerce.productDescription(),
             quantidade: faker.number.int({ min: 1, max: 100 }).toString()
         };
     }
 
-    static async createProductApi(page: any, productPayload: Product) {
-        const productApi = new ProductAPI();
-        const response = await productApi.createProductViaAPI(page.request, {
-            nome: productPayload.nome,
-            preco: productPayload.preco,
-            descricao: productPayload.descricao,
-            quantidade: productPayload.quantidade
-        });
-    }
-
-    static async deleteProductApi(page: any, id: string) {
-        const productApi = new ProductAPI();
-        const response = await productApi.deleteProductViaAPI(page.request, id);
-
-        expect(response.ok()).toBeTruthy();
-    }
-
-    static getRegisterProduct(type: string): Product {
+    static getRegisterProduct(type: string): ProductType {
         switch (type) {
             case 'success':
                 return this.generateSuccessProduct();

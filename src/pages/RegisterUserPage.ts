@@ -1,5 +1,5 @@
 import { expect, Page } from "@playwright/test";
-import { RegisterUserSelectors } from "../selectors/registerUserSelectors.ts";
+import { RegisterUserSelectors } from "../selectors/registerUserSelectors";
 
 export class RegisterUserPage {
     readonly page: Page;

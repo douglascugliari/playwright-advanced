@@ -46,16 +46,11 @@ export class ProductSelectors {
         return this.page.getByRole('button', { name: /listar produtos/i });
     }
 
-    waitForTableToLoad(productName?: string, timeoutMs = 15000): Promise<void> {
-        this.productTable().waitFor({ state: 'visible' });
-
-        if (productName) {
-            const cellWithProduct = this.productTable().getByRole('cell', { name: new RegExp(productName, 'i') });
-            return expect(cellWithProduct).toBeVisible({ timeout: timeoutMs });
-        } else {
-            return expect(this.tableRows().first()).toBeVisible({ timeout: timeoutMs });
-        }
+    async waitForTableToLoad(name?: string, timeoutMs = 15000) {
+        await this.productTable().waitFor({ state: 'visible', timeout: timeoutMs });
+        if (name) await expect(this.productTable().getByRole('cell', { name })).toBeVisible();
     }
+
 
     async findProductInTable(productName: string): Promise<Locator | null> {
         const cellWithProduct = this.productTable().getByRole('cell', { name: new RegExp(productName, 'i') });

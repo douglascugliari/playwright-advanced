@@ -1,0 +1,22 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "https://front.serverest.dev",
+      "localStorage": [
+        {
+          "name": "serverest/userNome",
+          "value": "Fulano da Silva"
+        },
+        {
+          "name": "serverest/userToken",
+          "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IlNhcmFfTWVsb0Bob3RtYWlsLmNvbSIsInBhc3N3b3JkIjoidGExTnJobjUyOW5kOWNEIiwiaWF0IjoxNzczNDI4NTc3LCJleHAiOjE3NzM0MjkxNzd9.U4gUUCK4lgvRJLu5TmjTfkDx6rDM6jpEO4X_x6mE3PM"
+        },
+        {
+          "name": "serverest/userEmail",
+          "value": "Sara_Melo@hotmail.com"
+        }
+      ]
+    }
+  ]
+}

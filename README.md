@@ -1,249 +1,349 @@
-# Playwright — Guia de Testes Automatizados E2E
+# Playwright Avançado - Framework de Testes E2E
 
-[![Playwright](https://img.shields.io/badge/Playwright-1.58-2EAD4C?logo=playwright)](https://playwright.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-10.x-F69220?logo=pnpm)](https://pnpm.io/)
+**Framework de automação de testes end-to-end** construído com **Playwright + TypeScript**, demonstrando arquitetura escalável e boas práticas para equipes de QA.
 
-Projeto **referência** para implementação de testes end-to-end (E2E) com [Playwright](https://playwright.dev/), demonstrando **boas práticas** e **padrões de automação** modernos. Utiliza TypeScript, Page Object Model (POM), Factory Pattern e integração com Faker para dados dinâmicos.
+Este projeto serve como **referência arquitetural** para implementação de testes automatizados em ambientes corporativos, com foco em **manutenibilidade, reusabilidade e execução paralela eficiente**.
 
-**Ideal para:** Desenvolvedores e QA que desejam aprender a estruturar testes automatizados de forma profissional e escalável.
+## 🎯 Propósito do Framework
 
----
+Este é um **projeto modelo** que implementa:
 
-## Índice
+- **Arquitetura enterprise-ready** para testes E2E
+- **Padrões de design** para automação sustentável
+- **Estrutura modular** que facilita a manutenção e expansão
+- **Integração UI + API** para testes híbridos
+- **Execução paralela otimizada** para CI/CD
 
-- [🎯 Por que este projeto?](#-por-este-projeto)
-- [📋 Funcionalidades testadas](#-funcionalidades-testadas)
-- [🛠️ Tecnologias](#️-tecnologias)
-- [📁 Estrutura do projeto](#-estrutura-do-projeto)
-- [⚙️ Pré-requisitos](#️-pré-requisitos)
-- [🚀 Instalação](#-instalação)
-- [▶️ Executando os testes](#️-executando-os-testes)
-- [📝 Cenários de teste](#cenários-de-teste)
-- [🏗️ Arquitetura](#arquitetura)
-- [📊 Relatórios](#relatórios)
-- [🎯 Aplicação sob teste](#aplicação-sob-teste)
+**Alvo de validação**: Ecossistema **Serverest** (API REST + Frontend React)
 
----
+## 🛠️ Stack Tecnológico
 
-## 🎯 Por que este projeto?
-
-Este projeto serve como **template e guia** para implementar testes E2E com Playwright seguindo as melhores práticas do mercado. Você aprenderá:
-
-- **Estrutura organizada**: Separação clara entre páginas, dados de teste e casos de teste
-- **Padrões profissionais**: Page Object Model, Factory Pattern, Helpers
-- **Dados dinâmicos**: Uso do Faker para gerar dados realistas e únicos
-- **Manutenibilidade**: Código limpo, tipado e fácil de manter
-- **Boas práticas**: Configuração robusta, relatórios detalhados e evidências
-
----
-
-## 📋 Funcionalidades testadas
-
-| Módulo | Descrição | Casos de teste |
-|--------|-----------|----------------|
-| **Autenticação** | Login com credenciais válidas/inválidas, validação de campos e redirecionamento por perfil | 5 cenários |
-| **Cadastro de usuários** | Registro com sucesso, e-mail já existente e campos obrigatórios | 3 cenários |
-| **Gestão de produtos** | Cadastro, exclusão, validações e produto com nome duplicado (requer login admin) | 5 cenários |
-
----
-
-## 🛠️ Tecnologias
-
-| Tecnologia | Versão | Propósito |
+| Componente | Versão | Propósito |
 |------------|--------|----------|
-| **Playwright** | 1.58+ | Framework de automação E2E moderno |
-| **TypeScript** | 5.x | Tipagem estática e melhor DX |
-| **pnpm** | 10.x | Gerenciador de pacotes eficiente |
-| **Faker.js** | 10.x | Geração de dados dinâmicos e realistas |
-| **dotenv** | 16.x | Gestão de variáveis de ambiente |
-| **Serverest** | - | Aplicação alvo para testes (API + Front) |
+| **Node.js** | 18+ | Runtime JavaScript |
+| **Playwright** | 1.58.2 | Framework de automação E2E |
+| **TypeScript** | 5.x | Tipagem forte e desenvolvimento seguro |
+| **Faker.js** | 10.3.0 | Geração de dados dinâmicos |
+| **Dotenv** | 16.3.1 | Gestão de variáveis de ambiente |
 
----
+## 📁 Arquitetura do Framework
 
-## 📁 Estrutura do projeto
-
-```
-Playwright/
-├── playwright.config.ts      # Configuração central do Playwright
-├── package.json              # Dependências e scripts
-├── .env / .env-example       # Variáveis de ambiente
-├── src/
-│   ├── pages/                # Page Objects (POM)
-│   │   ├── LoginPage.ts      # Página de login
-│   │   ├── RegisterUserPage.ts # Página de cadastro
-│   │   └── ProductPage.ts    # Página de produtos
-│   ├── data/                 # Dados de teste
-│   │   ├── factories/        # Factory Pattern para dados
-│   │   │   ├── userFactory.ts
-│   │   │   └── productFactory.ts
-│   │   └── messages/          # Mensagens de validação
-│   ├── utils/
-│   │   └── auth-helper.ts    # Helper para autenticação
-│   └── types/
-│       └── testUser.ts       # Tipos TypeScript
-└── tests/
-    ├── auth-login.spec.ts           # Testes de autenticação
-    ├── user-registration.spec.ts    # Testes de cadastro
-    └── product-management.spec.ts  # Testes de produtos
+```text
+├── 📋 playwright.config.ts     # Configuração central do Playwright
+├── 📦 package.json            # Dependências e scripts de execução
+├── 🔧 .env                    # Variáveis de ambiente (não versionado)
+├── 📂 tests/                  # Especificações de teste
+│   ├── 🔐 login.spec.ts
+│   ├── 👤 user-registration.spec.ts
+│   └── 📦 product-management.spec.ts
+└── 📂 src/                   # Código-fonte do framework
+    ├── 🏗️ core/              # Camada de infraestrutura
+    │   ├── ⚙️ fixtures/      # Injeção de dependências
+    │   └── 🏭 factories/     # Geração de dados dinâmicos
+    ├── 🖥️ pages/             # Page Objects (UI)
+    ├── 🎯 selectors/         # Localizadores centralizados
+    ├── 🌐 services/          # Camada de API
+    ├── 📝 data/              # Dados e mensagens de teste
+    ├── 📋 types/             # Contratos TypeScript
+    └── 🛠️ utils/             # Utilitários diversos
 ```
 
-**Princípios da estrutura:**
-- **Separação de responsabilidades**: Cada pasta tem um propósito claro
-- **Reutilização**: Page Objects e Factories podem ser usados em múltiplos testes
-- **Manutenibilidade**: Mudanças na UI afetam apenas os Page Objects
-- **Escalabilidade**: Fácil adicionar novas páginas e testes
+## 🏗️ Padrões Arquiteturais Implementados
 
----
+### 🎯 Page Object Model (POM)
 
-## ⚙️ Pré-requisitos
+**Localização**: `src/pages/` + `src/selectors/`
 
-- **Node.js** 18+ (recomendado LTS)
-- **pnpm** (ou npm/yarn, ajustando os comandos)
-- Navegadores: Chromium, Firefox e WebKit são instalados via Playwright
+- **Separação de responsabilidades**: Actions em Pages, Locators em Selectors
+- **Reutilização**: Selectors compartilhados entre diferentes fluxos
+- **Manutenibilidade**: Alterações de UI impactam apenas um ponto
 
----
+```typescript
+// Exemplo de uso
+await loginPage.goto();
+await loginPage.login(testUser.email, testUser.password);
+await loginPage.validateLoginSuccess();
+```
 
-## 🚀 Instalação
+### 🌐 Camada de Serviços API
 
-1. **Clone o repositório:**
+**Localização**: `src/services/`
 
-   ```bash
-   git clone <repository-url>
-   cd "Testes Automatizados/Playwright"
-   ```
+- **Abstração HTTP**: Cliente API centralizado com configuração de `BASE_URL_API`
+- **Operações CRUD**: Serviços dedicados para usuários e produtos
+- **Setup/Teardown**: Suporte para criação e limpeza de dados de teste
 
-2. **Instale as dependências:**
+**Serviços disponíveis**:
+- `userService.ts`: gerenciamento de usuários
+- `productService.ts`: gerenciamento de produtos  
+- `apiClient.ts`: cliente HTTP base
 
-   ```bash
-   pnpm install
-   ```
+### ⚙️ Fixtures Customizadas
 
-3. **Configure as variáveis de ambiente:**
+**Localização**: `src/core/fixtures/`
 
-   ```bash
-   cp .env-example .env
-   # Edite o arquivo .env com suas credenciais se necessário
-   ```
+**Injeção de dependências** para composição de contexto de teste:
 
-4. **Instale os binários dos navegadores:**
+- **page.fixture.ts**: Injeta Page Objects (loginPage, registerPage, productPage)
+- **api.fixture.ts**: Injeta utilidades API e `testUser` com cleanup automático
+- **test.fixture.ts**: Composição final utilizada nos specs
 
-   ```bash
-   pnpm run install-browsers
-   ```
+### 🏭 Factory Pattern para Dados
 
----
+**Localização**: `src/core/factories/`
 
-## ▶️ Executando os testes
+- **Dados dinâmicos**: Geração de dados únicos por execução
+- **Isolamento**: Evita colisões em execução paralela
+- **Realismo**: Dados realísticos usando Faker.js
+
+### 📝 Gestão de Dados e Mensagens
+
+**Localização**: `src/data/` + `src/types/`
+
+- **Mensagens centralizadas**: Textos esperados em um único local
+- **Tipagem forte**: Contratos TypeScript entre camadas
+- **Consistência**: Validações padronizadas
+
+## 🚀 Setup do Ambiente
+
+### Pré-requisitos
+
+- **Node.js** 18+ 
+- **Package manager**: npm ou pnpm
+- **Browsers Playwright** (instalados via setup)
+
+### Instalação e Configuração
+
+```bash
+# Clonar o projeto
+git clone <repositório>
+cd Playwright-Avancado
+
+# Instalar dependências
+npm install
+# ou
+pnpm install
+
+# Instalar browsers do Playwright
+npx playwright install
+# ou
+pnpm exec playwright install
+```
+
+### 🔧 Configuração de Ambiente
+
+Crie o arquivo `.env` na raiz do projeto:
+
+```env
+# URLs do ambiente de teste
+BASE_URL_API=https://api.serverest.dev
+BASE_URL_WEB=https://front.serverest.dev
+
+# Configurações de execução
+WORKERSLOCAL=2
+WORKERSCI=4
+RETRIESLOCAL=0
+RETRIESCI=1
+```
+
+## ⚡ Execução dos Testes
+
+### Scripts Disponíveis
 
 | Comando | Descrição |
 |---------|-----------|
-| `pnpm test` | Executa todos os testes (modo headless, 4 workers) |
-| `pnpm run test:parallel` | Executa com 4 workers em paralelo |
-| `pnpm run test:chrome` | Apenas Chromium, modo headed (janela visível) |
-| `pnpm run test:headed` | Todos os projetos, modo headed |
-| `pnpm run test:ui` | Abre a UI interativa do Playwright |
-| `pnpm run test:debug` | Modo debug (step-by-step) |
-| `pnpm run report` | Abre o último relatório HTML gerado |
+| `npm test` | Executa todos os testes |
+| `npm run test:parallel` | Execução paralela (4 workers) |
+| `npm run test:chrome` | Apenas Chrome em modo headed |
+| `npm run test:headed` | Todos os browsers em modo visível |
+| `npm run test:ui` | Interface interativa do Playwright |
+| `npm run test:debug` | Modo debug com breakpoint |
+| `npm run report` | Abre relatório HTML |
 
-**Exemplos práticos:**
+### Execução Específica
 
 ```bash
-# Rodar todos os testes
-pnpm test
+# Executar arquivo específico
+npx playwright test tests/login.spec.ts
 
-# Rodar apenas testes de login
-pnpm test tests/auth-login.spec.ts
+# Executar por título de teste
+npx playwright test --grep "TC-001"
 
-# Rodar com interface gráfica (recomendado para desenvolvimento)
-pnpm run test:ui
+# Executar em browser específico
+npx playwright test --project=chromium
 
-# Rodar em modo debug para troubleshooting
-pnpm run test:debug tests/auth-login.spec.ts
+# Execução com modo debug
+npx playwright test --debug
+```
 
-# Rodar apenas no Chrome com janela visível
-pnpm run test:chrome
+## 🔄 Estratégia de Paralelismo
+
+### Configuração Multi-Browser
+
+O framework executa testes em **três browsers simultaneamente**:
+- **Chromium** (Chrome/Edge)
+- **Firefox** 
+- **WebKit** (Safari)
+
+### Otimização para CI/CD
+
+```typescript
+// playwright.config.ts
+export default defineConfig({
+  fullyParallel: true,        // Paralelismo total
+  workers: process.env.CI ? 4 : 2,  // Workers adaptativos
+  retries: process.env.CI ? 1 : 0,  // Retry estratégico
+});
+```
+
+### Mitigação de Flakiness
+
+- **Dados dinâmicos**: Faker.js gera dados únicos por execução
+- **Cleanup automático**: Fixtures com gerenciamento de lifecycle
+- **Isolamento**: Cada teste executa em contexto independente
+- **Retry inteligente**: Apenas em ambientes CI
+
+## 📊 Relatórios e Evidências
+
+### Artefatos Gerados
+
+| Tipo | Localização | Condição |
+|------|-------------|----------|
+| **Relatório HTML** | `playwright-report/` | Sempre |
+| **Screenshots** | `test-results/` | Apenas em falhas |
+| **Videos** | `test-results/` | Apenas em falhas |
+| **Trace files** | `test-results/` | Primeiro retry |
+
+### Visualização
+
+```bash
+# Abrir relatório completo
+npm run report
+# ou
+npx playwright show-report
+```
+
+## 📋 Suíte de Testes Implementada
+
+### 🔐 Autenticação (`login.spec.ts`)
+
+| ID | Cenário | Tipo |
+|----|---------|------|
+| TC-001 | Login com credenciais válidas | Positivo |
+| TC-002 | Login com credenciais inválidas | Negativo |
+| TC-003 | Login com campos vazios | Validação |
+| TC-004 | Validação de formato e-mail | Validação |
+| TC-005 | Redirecionamento por perfil | Funcional |
+
+### 👤 Gestão de Usuários (`user-registration.spec.ts`)
+
+| ID | Cenário | Tipo |
+|----|---------|------|
+| TC-007 | Cadastro com sucesso | Positivo |
+| TC-008 | Cadastro com e-mail duplicado | Negativo |
+| TC-009 | Cadastro com campos obrigatórios vazios | Validação |
+
+### 📦 Gestão de Produtos (`product-management.spec.ts`)
+
+| ID | Cenário | Tipo |
+|----|---------|------|
+| TC-010 | Cadastro de produto com sucesso | Positivo |
+| TC-011 | Cadastro com campos inválidos | Validação |
+| TC-012 | Cadastro com campos vazios | Validação |
+| TC-013 | Exclusão de produto | Funcional |
+| TC-014 | Cadastro com nome duplicado | Negativo |
+
+## 🎯 Boas Práticas Implementadas
+
+### Padrões de Código
+- ✅ **Single Responsibility**: Cada classe com uma responsabilidade clara
+- ✅ **Dependency Injection**: Fixtures para composição de contexto
+- ✅ **Type Safety**: TypeScript em todas as camadas
+- ✅ **Immutability**: Dados de teste como objetos imutáveis
+
+### Gestão de Testes
+- ✅ **AAA Pattern**: Arrange, Act, Assert em todos os testes
+- ✅ **Descriptive Names**: Títulos que descrevem o comportamento
+- ✅ **Independent Tests**: Sem dependências entre testes
+- ✅ **Clean Teardown**: Remoção automática de recursos criados
+
+### Performance e Escalabilidade
+- ✅ **Parallel Execution**: Aproveitamento máximo de recursos
+- ✅ **Smart Retry**: Retry apenas onde realmente necessário
+- ✅ **Selective Execution**: Execução por browser, arquivo ou padrão
+- ✅ **Resource Management**: Cleanup eficiente de memória e conexões
+
+## 🚀 Como Evoluir este Framework
+
+### Adicionando Novos Fluxos
+
+1. **Page Object**: Crie classe em `src/pages/`
+2. **Selectors**: Defina localizadores em `src/selectors/`
+3. **Factory**: Implemente geração de dados em `src/core/factories/`
+4. **Service**: Adicione suporte API em `src/services/`
+5. **Spec**: Escreva testes usando fixtures existentes
+
+### Extendindo Fixtures
+
+```typescript
+// src/core/fixtures/custom.fixture.ts
+import { test as base } from './test.fixture';
+
+export const test = base.extend({
+  customPage: async ({ page }, use) => {
+    // Sua lógica customizada
+    await use(customPage);
+  }
+});
+```
+
+### Configuração para Novos Ambientes
+
+```typescript
+// config/env.ts
+export const env = {
+  // ... variáveis existentes
+  newEnvironment: process.env.NEW_ENV_URL
+};
+```
+
+## 🔧 Troubleshooting
+
+### Problemas Comuns
+
+| Problema | Causa | Solução |
+|----------|-------|---------|
+| Browser não inicia | Permissões SO/Checar instalação | `npx playwright install` |
+| Testes flaky | Dados compartilhados | Usar fixtures com dados dinâmicos |
+| Timeout em API | Lentidão da rede | Aumentar timeouts no config |
+| Paralelismo falhando | Dependência entre testes | Isolar dados e cleanup |
+
+### Debug Avançado
+
+```bash
+# Verificar configuração
+npx playwright test --list
+
+# Execução com traces detalhados
+npx playwright test --trace on
+
+# Modo interativo
+npx playwright test --ui
 ```
 
 ---
 
-## Cenários de teste
+## 📜 Licença e Contribuição
 
-### Autenticação e login (`auth-login.spec.ts`)
+Este é um **projeto de referência** para equipes de QA. Sinta-se à vontade para:
 
-| ID | Cenário |
-|----|---------|
-| TC-001 | Login com credenciais válidas |
-| TC-002 | Login com e-mail inválido |
-| TC-003 | Login com senha incorreta |
-| TC-004 | Login com campos vazios |
-| TC-005 | Validação de formato de e-mail |
-| TC-006 | Redirecionamento para área admin conforme perfil |
+- ✅ **Adotar** a arquitetura em seus projetos
+- ✅ **Adaptar** conforme necessidades específicas
+- ✅ **Contribuir** com melhorias e padrões
+- ✅ **Compartilhar** aprendizados com a comunidade
 
-### Cadastro de usuários (`user-registration.spec.ts`)
-
-| ID | Cenário |
-|----|---------|
-| TC-007 | Cadastro de novo usuário com sucesso |
-| TC-008 | Cadastro com e-mail já existente |
-| TC-009 | Cadastro com campos obrigatórios vazios |
-
-### Gestão de produtos (`product-management.spec.ts`)
-
-| ID | Cenário |
-|----|---------|
-| TC-010 | Cadastrar novo produto com sucesso |
-| TC-011 | Cadastrar produto com campos inválidos (preço/quantidade negativos) |
-| TC-012 | Cadastrar produto com campos vazios |
-| TC-013 | Excluir produto |
-| TC-014 | Cadastrar produto com nome duplicado |
-
-> Os testes de gestão de produtos fazem login como admin antes de cada teste via `AuthHelper`.
+**Desenvolvido com ❤️ para a comunidade de QA Automation**
 
 ---
 
-## Arquitetura
-
-- **Page Object Model (POM):** cada tela (login, cadastro, produtos) possui uma classe em `src/pages/` com locators e ações reutilizáveis.
-- **Test Data:** dados de teste centralizados em `src/data/` por fluxo (login, register, product), facilitando manutenção e variações (sucesso, falha, vazios).
-- **Auth Helper:** `src/utils/auth-helper.ts` realiza login prévio para specs que dependem de usuário autenticado (ex.: gestão de produtos).
-- **Base URL:** `https://front.serverest.dev` configurada em `playwright.config.ts`; os Page Objects usam caminhos relativos (ex.: `/login`, `/cadastrarusuarios`).
-
----
-
-## Configuração
-
-Principais opções em `playwright.config.ts`:
-
-- **Projetos (browsers):** Chromium, Firefox, WebKit, Mobile Chrome (Pixel 5), Mobile Safari (iPhone 12).
-- **Base URL:** `https://front.serverest.dev`.
-- **Paralelismo:** `fullyParallel: true`; 4 workers localmente, 1 em CI.
-- **Retries:** 2 em CI, 0 local.
-- **Evidências:** trace no primeiro retry; screenshot e vídeo apenas em falha.
-- **Reporters:** list (console) e HTML.
-
-Para CI, use variável de ambiente `CI=true` para ativar retries e 1 worker.
-
----
-
-## Relatórios
-
-Após a execução, o relatório HTML é gerado em `playwright-report/`. Para visualizar:
-
-```bash
-pnpm run report
-```
-
-Trace, screenshots e vídeos (em caso de falha) ficam em `test-results/`.
-
----
-
-## Aplicação sob teste
-
-Os testes utilizam o front-end do **[Serverest](https://serverest.dev/)** (`https://front.serverest.dev`), um projeto aberto de API REST + interface para prática de testes e desenvolvimento. Não é necessário subir ambiente local para rodar os testes contra esse front.
-
----
-
-## Licença
-
-ISC.
+> **Nota**: Este framework foi projetado como **modelo educacional e referência arquitetural**. Adapte as implementações conforme as necessidades específicas do seu projeto e ambiente.

@@ -14,7 +14,7 @@ export class LoginPage {
 
     async goto() {
         await this.page.goto('/login');
-        await this.page.waitForLoadState('networkidle');
+        await expect(this.loginSelectors.loginHeading()).toBeVisible();
     }
 
 

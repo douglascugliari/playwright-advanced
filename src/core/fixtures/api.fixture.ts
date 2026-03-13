@@ -1,21 +1,21 @@
-import { test as base } from '@playwright/test';
-import { createUserViaAPI, deleteUserViaAPI } from '../../services/userService';
-import type { User } from '../../types/user'; // case correto
+import { createUserViaAPI, deleteUserViaAPI, getTokenViaAPI } from '../../services/userService';
+import { UserType } from '../../types/UserType';
 import { UserFactory } from '../factories/userFactory';
 
-type ApiFixtures = {
-    testUser: User;
-    createUser: (payload: User) => Promise<string | null>;
+export type ApiFixtures = {
+    testUser: UserType;
+    createUser: (payload: UserType) => Promise<string | null>;
     deleteUser: (id: string) => Promise<void>;
+    token: string;
 };
 
-export const test = base.extend<ApiFixtures>({
+export const apiFixtures = {
     testUser: async ({ }, use) => {
         const credentials = UserFactory.getUser('success');
         const id = await createUserViaAPI(credentials);
         if (!id) throw new Error('Falha ao criar usuário via API');
 
-        const user: User = { ...credentials, id };
+        const user: UserType = { ...credentials, id };
         try {
             await use(user);
         } finally {
@@ -30,4 +30,11 @@ export const test = base.extend<ApiFixtures>({
     deleteUser: async ({ }, use) => {
         await use(deleteUserViaAPI);
     },
-});
+
+    token: async ({ }, use) => {
+        const credentials = UserFactory.getUser('success');
+        const id = await createUserViaAPI(credentials);
+        const token = await getTokenViaAPI(credentials.email, credentials.password);
+        await use(token);
+    }
+};
